@@ -1,0 +1,32 @@
+abtlinst 0.01
+
+(C)Abe Noriyuki abenori@math.sci.hokudai.ac.jp
+                http://www.math.sci.hokudai.ac.jp/~abenori/
+
+★始めに
+以下をインストールするインストーラです．
+・TeX Live 2013
+・TeX2img
+・ImageMagick
+・nkf
+また，日本語環境用のいくつかの設定を行います．
+
+★DVDの作り方
+添付dvd.txtをみてください．
+
+★ライセンス
+本体には修正BSDライセンスが適用されます．（license.txt参照．）
+
+★連絡先 （要望，バグ報告などはこちらまで）
+阿部 紀行（あべ のりゆき）
+abenori@math.sci.hokudai.ac.jp
+http://www.math.sci.hokudai.ac.jp/~abenori/
+
+★開発環境
+・Microsoft Windows 7 Ultimate/Professional
+・Microsoft Visual Studio 2012 Express for Windows Desktop
+
+★履歴
+●0.01(2003/11/6)
+・（主に美文書用に）作ってみた．
+

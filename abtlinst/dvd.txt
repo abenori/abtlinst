@@ -1,0 +1,124 @@
+インストールDVD作成の仕方．
+
+大まかには次の通り．
+
+1. abtlinst.exeと必要ファイルを配置．
+2. abtlinst.iniとabtlinst_sys.iniを書く．
+3. 必要ならばautorun.infを書いてDVDに焼く．
+
+★ファイル配置
+たとえば以下の通り．
+●<dir>\
+｜・abtlinst.exe
+｜・abtlinst.ini
+｜・abtlinst_sys.ini
+｜
+├─●files\
+｜・TeX2img.exe
+｜・ImageMagick.exe
+｜・nkf.exe
+└─●files_tl\                    ：TeX LiveのISOイメージを展開したもの
+    ｜・install-tl.bat
+    ｜・etc...
+    └─●tlpkg\
+        ｜...
+        └─●installer\
+              ・install-menu-abnr.pl
+              ・etc...
+
+1. 適当なフォルダ（以下<dir>）を作る．
+2. abtexinst.exeを<dir>におく．
+3. <dir>以下にfiles_tlというフォルダを作成し，TeX LiveのISOイメージを展開したものをおく．（install-tl.batというファイルがfiles_tlフォルダ直下に入るようにする．）
+4. files_tl\tlpkg\installer\install-menu-abnr.plを配置する．
+5. files以下にnkf，TeX2img，ImageMagickを配置する．
+
+★abtexinst_sys.ini，abtexinst.iniの作成 
+abtlinst.exeから読み込まれる設定ファイルです．典型的には以下．
+
+<abtlinst_sys.ini>
+[TeXLive]
+FileDir=.\files_tl
+[abtlinst]
+DownloadDir=.\files
+LogFile=3
+[TeX2img]
+Reg=TeX2img\.exe
+[ImageMagick]
+Reg=ImageMagick.*\.exe
+[nkf]
+Reg=nkf\.exe
+
+以下の意味を持ちます．
+●[TeXLive]
+・FileDir
+TeXLiveが入っているフォルダを指します．abtlinst.exeからの相対パスで指定できます．絶対パスでも大丈夫ですが，使う機会はないでしょう．
+●[abtlinst]
+・DownloadDir
+ファイルのあるフォルダを指定します．[TeXLive]FileDirが指定されていない場合は，TeXLiveのインストーラを(DownloadDir)\install-tlから探します．
+・LogFile
+ログをはき出す場所を指定します．
+1: インストールディレクトリ
+2: 保存フォルダ
+3: デスクトップ
+4: システムドライブ直下
+その他: abtlinst.exeと同じフォルダ．
+●[TeX2img][ImageMagick][nkf]
+・Reg
+ファイル名を表す正規表現を指定します．
+
+<abtlinst.ini>
+[abtlinst]
+setpath=1
+InstallDir=
+[abnrSetting]
+install=1
+[TeXLive]
+install=1
+[ImageMagick]
+install=1
+[nkf]
+install=1
+[TeX2img]
+install=1
+[TeXLive_var]
+option_adjustrepo=0
+
+●[abtlinst]
+・setpath
+PATHの設定を行うかどうかを指定します．1で行う，0で行わない．
+・InstallDir
+インストールディレクトリを指定します．たとえばC:\texliveな場合，C:\texlive\2013にTeX Liveが（TeX Live 2013の場合），C:\texlive\gs\gs9.07にGhostscriptが（Ghostscript 9.07の場合）インストールされます．
+空にしておくとシステムドライブ以下のtexliveフォルダに入ります．
+
+●[abnrSetting]
+・install
+あべのり設定を行うかどうかを指定します．1で行う，0で行わない．
+
+●[TeXLive][TeX2img][ImageMagick][nkf]
+・install
+インストールを行うかどうかを指定します．1で行う，0で行わない．
+
+●[TeXLive_var]
+TeX Liveインストーラ内部の変数のデフォルト値を設定します．例えばこんなんがあるらしい．（設定画面に現れるもの．）値は（だいたい）1か0のどちらかです．
+・option_file_assocs：ファイルの関連付け
+・option_letter：規定の紙サイズをレターにする
+・selected_scheme：どのスキームをインストールするか
+・option_write18_restricted：write18
+・option_fmt：フォーマットファイルを作るか
+・option_doc：ドキュメントをインストールするか
+・option_src：ソースをインストールするか
+・collection-texworks：TeXworksをインストールするか
+・option_adjustrepo：インストール後にネットワーク経由で更新をチェックするか……なんだけど，機能している気がしない．
+それと，abtlinst独自の値が以下．
+・abnr_use_texlivedir_prefix：TEXDIRをインストールディレクトリにあわせる
+・abnr_dir_indep：TEXMFSYSVARとかをTEXDIRとは独立に設定する
+
+★install-menu-abnr.plをおく．
+install-tl\tlpkg\installerにinstall-menu-abnr.plを置きます．
+同じ場所には，install-menuから始まるファイルがいくつか（install-menu-perltk.pl，install-menu-text.pl，install-menu-wizard.pl）があるはずです．
+ファイルは
+http://www.math.sci.hokudai.ac.jp/~abenori/tmp/install-menu-abnr.pl
+にあります．または，この場所が書き込み可能ならば自動生成されますので，一度TeX LiveのISOをHDDにでも展開してやりインストーラを実行すれば生成されます．
+
+
+
