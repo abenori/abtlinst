@@ -104,7 +104,10 @@ bool TeXworksSetting(
 	std::function<void (const ablib::string&)> detail,
 	std::function<void (const ablib::string&)> error
 ){
-	if(::GetFileAttributes((tldir + _T("tlpkg\\texworks")).c_str()) == -1)return true;
+	if(::GetFileAttributes((tldir + _T("tlpkg\\texworks")).c_str()) == -1){
+		error(_T("TeXworks フォルダが見つかりません．"));
+		return true;
+	}
 
 //	msgfunc(_T("TeXworks の設定をいじります．\n"),false);
 
@@ -124,7 +127,10 @@ bool TeXworksSetting(
 	si.RedirectStandardInput = false;
 	si.WorkingDirectory = tldir + _T("bin\\win32");
 	process.StartInfo(si);
-	if(!process.Start())return false;
+	if(!process.Start()){
+		error(_T("kpsewhich の起動に失敗しました．"));
+		return false;
+	}
 	char buf[4096];
 	ablib::string inipath;
 	while(DWORD size = process.WaitRead(buf,4095)){

@@ -48,14 +48,14 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	ablib::string error_msg,detail_msg;
 	std::function<void (const ablib::string &)> msg,detail,error;
 	msg = [](const ablib::string &msg){::_tcprintf(_T("%s"),msg.c_str());};
-	detail = [&detail_msg](const ablib::string &msg){detail_msg += msg;::_tcprintf(_T("%s"),msg.c_str());};
-	error = [&error_msg](const ablib::string &msg){error_msg += msg;};
+	detail = [&detail_msg](const ablib::string &msg){detail_msg += msg + _T("\n"); ::_tcprintf(_T("%s"), msg.c_str()); };
+	error = [&error_msg](const ablib::string &msg){error_msg += msg + _T("\n");};
 
 	bool b = true;
-	if(texmfcnf)b = (b & abnrSetting_funcs::writetexmfcnf(msg,detail,error));
-	if(ipaex)b = (b & abnrSetting_funcs::kanji_config_updmap(msg,detail,error,_T("ipaex")));
-	if(TeXworks)b = (b & abnrSetting_funcs::TeXworksSetting(msg,detail,error));
-	if(tex2img)b = (b & TeX2img_funcs::Set(msg,detail,error));
+	if(texmfcnf)b = (b && abnrSetting_funcs::writetexmfcnf(msg,detail,error));
+	if(ipaex)b = (b && abnrSetting_funcs::kanji_config_updmap(msg,detail,error,_T("ipaex")));
+	if(TeXworks)b = (b && abnrSetting_funcs::TeXworksSetting(msg,detail,error));
+	if(tex2img)b = (b && TeX2img_funcs::Set(msg,detail,error));
 	if(b){
 		if(error_msg != _T(""))error_msg += _T("\n");
 		::MessageBox(NULL,(_T("ê≥èÌèIóπÇµÇ‹ÇµÇΩÅD") + error_msg).c_str(),_T("abtlinst_patch"),0);

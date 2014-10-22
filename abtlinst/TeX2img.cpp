@@ -74,10 +74,16 @@ bool TeX2img::Install(HWND hwnd,MSGFUNC &msgfunc){
 	dir += _T("bin\\win32\\");
 	::CreateDirectoryReflex(dir.c_str());
 	msgfunc.msg(_T("TeX2img のインストール\n"));
-	::CopyFile((m_filedir + m_file).c_str(),(dir + _T("TeX2img.exe")).c_str(),TRUE);
-	::CopyFile((m_filedir + m_file + _T(".config")).c_str(),(dir + _T("TeX2img.exe.config")).c_str(),TRUE);
-	::CopyDirectory(m_filedir + _T("pstoedit"),dir + _T("pstoedit"));
+	if (
+		!::CopyFile((m_filedir + m_file).c_str(), (dir + _T("TeX2img.exe")).c_str(), TRUE) ||
+		!::CopyFile((m_filedir + m_file + _T(".config")).c_str(), (dir + _T("TeX2img.exe.config")).c_str(), TRUE) ||
+		!::CopyFile((m_filedir + _T("Azuki.dll")).c_str(), (dir + _T("Azuki.dll")).c_str(), TRUE))
+	{
+		g_Setting.Log(_T("TeX2imgのインストール：ファイルのコピーに失敗．"));
+	}
+	//::CopyDirectory(m_filedir + _T("pstoedit"),dir + _T("pstoedit"));
 	msgfunc.detail(_T("TeX2img をインストールしました．\n"));
+	DEBUGSTRING((g_Applications.m_TeXLive.GetVar(_T("TEXDIR")) + _T("\\")).c_str());
 	return TeX2img_funcs::Set(
 		g_Applications.m_TeXLive.GetVar(_T("TEXDIR")) + _T("\\"),
 		msgfunc.msg,msgfunc.detail,
