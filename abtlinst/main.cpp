@@ -45,6 +45,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 	return 0;
 
 */
+
 	OutputVersionInfo();
 
 	::CoInitialize(NULL);

@@ -35,6 +35,7 @@ bool abnrSetting::Install(HWND hwnd,MSGFUNC &msgfunc){
 	GetTeXLiveDir();
 	if(m_tldir == _T("")){
 //		msgfunc(_TR("TeX Liveのフォルダ取得に失敗\n"),false);
+		g_Setting.Log(_T("あべのり設定中：TeX Live フォルダ取得に失敗しました．"));
 		return false;
 	}
 

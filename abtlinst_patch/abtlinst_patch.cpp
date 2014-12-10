@@ -57,7 +57,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	if(TeXworks)b = (b && abnrSetting_funcs::TeXworksSetting(msg,detail,error));
 	if(tex2img)b = (b && TeX2img_funcs::Set(msg,detail,error));
 	if(b){
-		if(error_msg != _T(""))error_msg += _T("\n");
+		if(error_msg != _T(""))error_msg = _T("\n") + error_msg;
 		::MessageBox(NULL,(_T("ê≥èÌèIóπÇµÇ‹ÇµÇΩÅD") + error_msg).c_str(),_T("abtlinst_patch"),0);
 		::FreeConsole();
 		return 0;

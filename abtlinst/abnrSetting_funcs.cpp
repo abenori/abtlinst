@@ -98,159 +98,241 @@ bool writetexmfcnf(
 	}else return true;
 }
 
+void GenerateToolsINI(std::wofstream &wofs){
+#define RETTEXT(s) << _T(s) << std::endl
+	wofs
+		RETTEXT("[001]")
+		RETTEXT("name=pdfTeX")
+		RETTEXT("program=pdftex.exe")
+		RETTEXT("arguments=$synctexoption, $fullname")
+		RETTEXT("showPdf=true")
+		RETTEXT("")
+		RETTEXT("[002]")
+		RETTEXT("name=pdfLaTeX")
+		RETTEXT("program=pdflatex.exe")
+		RETTEXT("arguments=$synctexoption, $fullname")
+		RETTEXT("showPdf=true")
+		RETTEXT("")
+		RETTEXT("[003]")
+		RETTEXT("name=LuaTeX")
+		RETTEXT("program=luatex.exe")
+		RETTEXT("arguments=$synctexoption, $fullname")
+		RETTEXT("showPdf=true")
+		RETTEXT("")
+		RETTEXT("[004]")
+		RETTEXT("name=LuaLaTeX")
+		RETTEXT("program=lualatex.exe")
+		RETTEXT("arguments=$synctexoption, $fullname")
+		RETTEXT("showPdf=true")
+		RETTEXT("")
+		RETTEXT("[005]")
+		RETTEXT("name=XeTeX")
+		RETTEXT("program=xetex.exe")
+		RETTEXT("arguments=$synctexoption, $fullname")
+		RETTEXT("showPdf=true")
+		RETTEXT("")
+		RETTEXT("[006]")
+		RETTEXT("name=XeLaTeX")
+		RETTEXT("program=xelatex.exe")
+		RETTEXT("arguments=$synctexoption, $fullname")
+		RETTEXT("showPdf=true")
+		RETTEXT("")
+		RETTEXT("[007]")
+		RETTEXT("name=ConTeXt (LuaTeX)")
+		RETTEXT("program=context.exe")
+		RETTEXT("arguments=--synctex, $fullname")
+		RETTEXT("showPdf=true")
+		RETTEXT("")
+		RETTEXT("[008]")
+		RETTEXT("name=ConTeXt (pdfTeX)")
+		RETTEXT("program=texexec.exe")
+		RETTEXT("arguments=--synctex, $fullname")
+		RETTEXT("showPdf=true")
+		RETTEXT("")
+		RETTEXT("[009]")
+		RETTEXT("name=ConTeXt (XeTeX)")
+		RETTEXT("program=texexec.exe")
+		RETTEXT("arguments=--synctex, --xtx, $fullname")
+		RETTEXT("showPdf=true")
+		RETTEXT("")
+		RETTEXT("[010]")
+		RETTEXT("name=BibTeX")
+		RETTEXT("program=bibtex.exe")
+		RETTEXT("arguments=$basename")
+		RETTEXT("showPdf=false")
+		RETTEXT("")
+		RETTEXT("[011]")
+		RETTEXT("name=MakeIndex")
+		RETTEXT("program=makeindex.exe")
+		RETTEXT("arguments=$basename")
+		RETTEXT("showPdf=false")
+		RETTEXT("")
+		RETTEXT("[012]")
+		RETTEXT("name=pLaTeX (ptex2pdf)")
+		RETTEXT("program=ptex2pdf")
+		RETTEXT("arguments=-l, -ot, -kanji=utf8 $synctexoption, $fullname")
+		RETTEXT("showPdf=true")
+		RETTEXT("")
+		RETTEXT("[013]")
+		RETTEXT("name=upLaTeX (ptex2pdf)")
+		RETTEXT("program=ptex2pdf")
+		RETTEXT("arguments=-l, -u, -ot, -kanji=utf8 $synctexoption, $fullname")
+		RETTEXT("showPdf=true")
+		RETTEXT("")
+		RETTEXT("[014]")
+		RETTEXT("name=pBibTeX")
+		RETTEXT("program=pbibtex.exe")
+		RETTEXT("arguments=$basename")
+		RETTEXT("showPdf=false")
+		RETTEXT("")
+		RETTEXT("[015]")
+		RETTEXT("name=mendex")
+		RETTEXT("program=mendex.exe")
+		RETTEXT("arguments=$basename")
+		RETTEXT("showPdf=false")
+		;
+#undef RETTEXT
+}
+
 bool TeXworksSetting(
 	const ablib::string &tldir,
-	std::function<void (const ablib::string&)> msg,
-	std::function<void (const ablib::string&)> detail,
-	std::function<void (const ablib::string&)> error
-){
-	if(::GetFileAttributes((tldir + _T("tlpkg\\texworks")).c_str()) == -1){
+	std::function<void(const ablib::string&)> msg,
+	std::function<void(const ablib::string&)> detail,
+	std::function<void(const ablib::string&)> error
+	){
+	if (::GetFileAttributes((tldir + _T("tlpkg\\texworks")).c_str()) == -1){
 		error(_T("TeXworks フォルダが見つかりません．"));
 		return true;
 	}
 
-//	msgfunc(_T("TeXworks の設定をいじります．\n"),false);
+	//	msgfunc(_T("TeXworks の設定をいじります．\n"),false);
 
-/*
-	FILE *fp = ::_tfopen((m_tldir + _T("bin\\win32\\pdfplatex.bat")).c_str(),_T("w"));
-	if(!fp)return false;
-	::_ftprintf(fp,_T("@echo off\nplatex -synctex=1 -jobname=\"%~n1\" -kanji=utf8 -guess-input-enc %1 && ^\ndvipdfmx \"%~n1\""));
-	::fclose(fp);
-*/
+	/*
+		FILE *fp = ::_tfopen((m_tldir + _T("bin\\win32\\pdfplatex.bat")).c_str(),_T("w"));
+		if(!fp)return false;
+		::_ftprintf(fp,_T("@echo off\nplatex -synctex=1 -jobname=\"%~n1\" -kanji=utf8 -guess-input-enc %1 && ^\ndvipdfmx \"%~n1\""));
+		::fclose(fp);
+		*/
 	detail(_T("TeXworks の設定をあべのり的にします．\n"));
-	
+	//::SetEnvironmentVariable(_T("USERPROFILE"), _T("C:\\Users\\Abe_Noriyuki\\Desktop\\あべのり\\表示"));
+
 	ablib::system::Process process;
 	ablib::system::Process::ProcessStartInfo si;
 	si.FileName = _T("");
-	si.Arguments =  tldir + _T("bin\\win32\\kpsewhich.exe -var-value=TW_INIPATH");
+	si.Arguments = tldir + _T("bin\\win32\\kpsewhich.exe -var-value=TW_INIPATH");
 	si.RedirectStandardOutput = si.RedirectStandardError = true;
 	si.RedirectStandardInput = false;
 	si.WorkingDirectory = tldir + _T("bin\\win32");
 	process.StartInfo(si);
-	if(!process.Start()){
+	if (!process.Start()){
 		error(_T("kpsewhich の起動に失敗しました．"));
 		return false;
 	}
 	char buf[4096];
 	ablib::string inipath;
-	while(DWORD size = process.WaitRead(buf,4095)){
+	while (DWORD size = process.WaitRead(buf, 4095)){
 		buf[size] = '\0';
 		inipath += ablib::TransCode::FromChar(buf);
 	}
-	DEBUGSTRING(_T("abnrSetting::TeXWorksSetting kpsewhich -var-varlue=TW_INIPATH = [%s]"),inipath.c_str());
-	inipath.replace(_T("\r"),_T(""));
-	inipath.replace(_T("\n"),_T(""));
+	DEBUGSTRING(_T("abnrSetting::TeXWorksSetting kpsewhich -var-varlue=TW_INIPATH = [%s]"), inipath.c_str());
+	inipath.replace(_T("\r"), _T(""));
+	inipath.replace(_T("\n"), _T(""));
 	std::wregex reg;
-	try{reg.assign(_T("^ *(.*?)( *)$"));}catch(...){ASSERT(false);}
-	inipath = std::regex_replace(inipath,reg,ablib::string(_T("$1")));
-	inipath.replace(_T("/"),_T("\\"));
+	try{ reg.assign(_T("^ *(.*?)( *)$")); }
+	catch (...){ ASSERT(false); }
+	inipath = std::regex_replace(inipath, reg, ablib::string(_T("$1")));
+	inipath.replace(_T("/"), _T("\\"));
+	DEBUGSTRING(_T("abnrSetting::TeXWorksSetting inipath = [%s]"), inipath.c_str());
 
 	ablib::string tools_ini = inipath + _T("\\configuration\\tools.ini");
-//	if(::GetFileAttributes(tools_ini.c_str()) == -1){
-		::CreateDirectoryReflex((inipath + _T("\\configuration\\")).c_str());
+	//	if(::GetFileAttributes(tools_ini.c_str()) == -1){
+	::CreateDirectoryReflex((inipath + _T("\\configuration\\")).c_str());
+	{
 		std::wofstream ofs(tools_ini);
-#define RETTEXT(s) << _T(s) << std::endl
-		if(ofs){
-			ofs
-				RETTEXT("[001]")
-				RETTEXT("name=pdfTeX")
-				RETTEXT("program=pdftex.exe")
-				RETTEXT("arguments=$synctexoption, $fullname")
-				RETTEXT("showPdf=true")
-				RETTEXT("")
-				RETTEXT("[002]")
-				RETTEXT("name=pdfLaTeX")
-				RETTEXT("program=pdflatex.exe")
-				RETTEXT("arguments=$synctexoption, $fullname")
-				RETTEXT("showPdf=true")
-				RETTEXT("")
-				RETTEXT("[003]")
-				RETTEXT("name=LuaTeX")
-				RETTEXT("program=luatex.exe")
-				RETTEXT("arguments=$synctexoption, $fullname")
-				RETTEXT("showPdf=true")
-				RETTEXT("")
-				RETTEXT("[004]")
-				RETTEXT("name=LuaLaTeX")
-				RETTEXT("program=lualatex.exe")
-				RETTEXT("arguments=$synctexoption, $fullname")
-				RETTEXT("showPdf=true")
-				RETTEXT("")
-				RETTEXT("[005]")
-				RETTEXT("name=XeTeX")
-				RETTEXT("program=xetex.exe")
-				RETTEXT("arguments=$synctexoption, $fullname")
-				RETTEXT("showPdf=true")
-				RETTEXT("")
-				RETTEXT("[006]")
-				RETTEXT("name=XeLaTeX")
-				RETTEXT("program=xelatex.exe")
-				RETTEXT("arguments=$synctexoption, $fullname")
-				RETTEXT("showPdf=true")
-				RETTEXT("")
-				RETTEXT("[007]")
-				RETTEXT("name=ConTeXt (LuaTeX)")
-				RETTEXT("program=context.exe")
-				RETTEXT("arguments=--synctex, $fullname")
-				RETTEXT("showPdf=true")
-				RETTEXT("")
-				RETTEXT("[008]")
-				RETTEXT("name=ConTeXt (pdfTeX)")
-				RETTEXT("program=texexec.exe")
-				RETTEXT("arguments=--synctex, $fullname")
-				RETTEXT("showPdf=true")
-				RETTEXT("")
-				RETTEXT("[009]")
-				RETTEXT("name=ConTeXt (XeTeX)")
-				RETTEXT("program=texexec.exe")
-				RETTEXT("arguments=--synctex, --xtx, $fullname")
-				RETTEXT("showPdf=true")
-				RETTEXT("")
-				RETTEXT("[010]")
-				RETTEXT("name=BibTeX")
-				RETTEXT("program=bibtex.exe")
-				RETTEXT("arguments=$basename")
-				RETTEXT("showPdf=false")
-				RETTEXT("")
-				RETTEXT("[011]")
-				RETTEXT("name=MakeIndex")
-				RETTEXT("program=makeindex.exe")
-				RETTEXT("arguments=$basename")
-				RETTEXT("showPdf=false")
-				RETTEXT("")
-				RETTEXT("[012]")
-				RETTEXT("name=pLaTeX (ptex2pdf)")
-				RETTEXT("program=ptex2pdf")
-				RETTEXT("arguments=-l, -ot, -kanji=utf8 $synctexoption, $fullname")
-				RETTEXT("showPdf=true")
-				RETTEXT("")
-				RETTEXT("[013]")
-				RETTEXT("name=upLaTeX (ptex2pdf)")
-				RETTEXT("program=ptex2pdf")
-				RETTEXT("arguments=-l, -u, -ot, -kanji=utf8 $synctexoption, $fullname")
-				RETTEXT("showPdf=true")
-				RETTEXT("")
-				RETTEXT("[014]")
-				RETTEXT("name=pBibTeX")
-				RETTEXT("program=pbibtex.exe")
-				RETTEXT("arguments=$basename")
-				RETTEXT("showPdf=false")
-				RETTEXT("")
-				RETTEXT("[015]")
-				RETTEXT("name=mendex")
-				RETTEXT("program=mendex.exe")
-				RETTEXT("arguments=$basename")
-				RETTEXT("showPdf=false")
-			;
-#undef RETTEXT
+		if (ofs){
+			GenerateToolsINI(ofs);
 			::CreateDirectoryReflex((inipath + _T("\\TUG\\")).c_str());
-			if(::WritePrivateProfileString(_T("General"),_T("defaultEngine"),_T("pLaTeX (ptex2pdf)"),(inipath + _T("\\TUG\\TeXworks.ini")).c_str()) == FALSE){
+			if (::WritePrivateProfileString(_T("General"), _T("defaultEngine"), _T("pLaTeX (ptex2pdf)"), (inipath + _T("\\TUG\\TeXworks.ini")).c_str()) == FALSE){
 				error(inipath + _T("\\TUG\\TeXworks.ini への書き込みに失敗：GetLastError = ") + boost::lexical_cast<ablib::string>(::GetLastError()));
 			}
-		}else{
+		}
+		else{
 			error(tools_ini + _T("が開けませんでした．"));
 		}
-//	}
+	}
+	//	}
+
+	DWORD size = ::ExpandEnvironmentStrings(_T("%USERPROFILE%\\TeXworks\\configuration"), NULL, 0);
+	TCHAR *b = new TCHAR[size + 10];
+	if (::ExpandEnvironmentStrings(_T("%USERPROFILE%\\TeXworks\\configuration"),b, size + 1)){
+		if (::GetFileAttributes(b) != -1){
+			tools_ini = ablib::string(b) + _T("\\tools.ini");
+			if (::GetFileAttributes(tools_ini.c_str()) == -1){
+				error(tools_ini + _T(" を生成します．"));
+				{
+					std::wofstream ofs(tools_ini);
+					if (ofs)GenerateToolsINI(ofs);
+					else error(tools_ini + _T(" が開けませんでした．"));
+				}
+			}else{
+				error(tools_ini + _T(" に追記します．"));
+				int secnum = 1;
+				ablib::string section;
+				bool platex = true, uplatex = true, pbibtex = true, mendex = true;
+				for (; secnum < 1000; ++secnum){
+					section = boost::lexical_cast<ablib::string>(secnum);
+					section = ablib::string(_T("000")).substr(section.length()) + section;
+					TCHAR buf2[4096];
+					::lstrcpy(buf2, _T(""));
+					::GetPrivateProfileString(section.c_str(), _T("name"), _T(""), buf2, 4095, tools_ini.c_str());
+					if (::lstrcmp(buf2, _T("")) == 0)break;
+					else if (::lstrcmp(buf2, _T("pLaTeX (ptex2pdf)")) == 0)platex = false;
+					else if (::lstrcmp(buf2, _T("upLaTeX (ptex2pdf)")) == 0)uplatex = false;
+					else if (::lstrcmp(buf2, _T("pBibTeX")) == 0)pbibtex = false;
+					else if (::lstrcmp(buf2, _T("mendex")) == 0)mendex = false;
+				}
+				--secnum;
+				if (platex){
+					++secnum;
+					section = boost::lexical_cast<ablib::string>(secnum);
+					section = ablib::string(_T("000")).substr(section.length()) + section;
+					::WritePrivateProfileString(section.c_str(), _T("name"), _T("pLaTeX (ptex2pdf)"), tools_ini.c_str());
+					::WritePrivateProfileString(section.c_str(), _T("program"), _T("ptex2pdf"), tools_ini.c_str());
+					::WritePrivateProfileString(section.c_str(), _T("arguments"), _T("-l, -ot, -kanji=utf8 $synctexoption, $fullname"), tools_ini.c_str());
+					::WritePrivateProfileString(section.c_str(), _T("showPdf"), _T("true"), tools_ini.c_str());
+				}
+				if (uplatex){
+					++secnum;
+					section = boost::lexical_cast<ablib::string>(secnum);
+					section = ablib::string(_T("000")).substr(section.length()) + section;
+					::WritePrivateProfileString(section.c_str(), _T("name"), _T("upLaTeX (ptex2pdf)"), tools_ini.c_str());
+					::WritePrivateProfileString(section.c_str(), _T("program"), _T("ptex2pdf"), tools_ini.c_str());
+					::WritePrivateProfileString(section.c_str(), _T("arguments"), _T("-l, -u, -ot, -kanji=utf8 $synctexoption, $fullname"), tools_ini.c_str());
+					::WritePrivateProfileString(section.c_str(), _T("showPdf"), _T("true"), tools_ini.c_str());
+				}
+				if (pbibtex){
+					++secnum;
+					section = boost::lexical_cast<ablib::string>(secnum);
+					section = ablib::string(_T("000")).substr(section.length()) + section;
+					::WritePrivateProfileString(section.c_str(), _T("name"), _T("pBibTeX"), tools_ini.c_str());
+					::WritePrivateProfileString(section.c_str(), _T("program"), _T("pbibtex.exe"), tools_ini.c_str());
+					::WritePrivateProfileString(section.c_str(), _T("arguments"), _T("$basename"), tools_ini.c_str());
+					::WritePrivateProfileString(section.c_str(), _T("showPdf"), _T("false"), tools_ini.c_str());
+				}
+				if (mendex){
+					++secnum;
+					section = boost::lexical_cast<ablib::string>(secnum);
+					section = ablib::string(_T("000")).substr(section.length()) + section;
+					::WritePrivateProfileString(section.c_str(), _T("name"), _T("mendex"), tools_ini.c_str());
+					::WritePrivateProfileString(section.c_str(), _T("program"), _T("mendex.exe"), tools_ini.c_str());
+					::WritePrivateProfileString(section.c_str(), _T("arguments"), _T("$basename"), tools_ini.c_str());
+					::WritePrivateProfileString(section.c_str(), _T("showPdf"), _T("false"), tools_ini.c_str());
+				}
+			}
+		}
+	}
+	delete[] b;
+
 	return true;
 }
 
