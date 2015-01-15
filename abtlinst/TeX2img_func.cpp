@@ -23,7 +23,7 @@ bool Set(
 	si.RedirectStandardError = si.RedirectStandardInput = si.RedirectStandardOutput = false;
 	si.ShowState = si.show;
 	si.WorkingDirectory = tldir + _T("bin\\win32");
-	MessageBox(NULL, si.Arguments.c_str(), NULL, 0);
+	//MessageBox(NULL, si.Arguments.c_str(), NULL, 0);
 	process.StartInfo(si);
 	if(!process.Start()){
 		error(_T("TeX2img ÇÃê›íËÇ…é∏îsÅDGetLastError = ") + boost::lexical_cast<ablib::string>(ablib::system::GetLastError()));

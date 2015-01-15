@@ -15,7 +15,10 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	int argc;
 	TCHAR **argv = ::CommandLineToArgvW(::GetCommandLine(),&argc);
 	bool TeXworks = true,ipaex = true,texmfcnf = true,tex2img = true;
-	for(int i = 0 ; i < argc ; ++i){
+#ifdef NOTEX2IMG
+	tex2img = false;
+#endif
+	for (int i = 0; i < argc; ++i){
 		if(::lstrcmp(argv[i],_T("/noTeXworks")) == 0)TeXworks = false;
 		else if(::lstrcmp(argv[i],_T("/noipaex")) == 0)ipaex = false;
 		else if(::lstrcmp(argv[i],_T("/notexmfcnf")) == 0)texmfcnf = false;

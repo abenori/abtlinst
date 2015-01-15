@@ -268,14 +268,14 @@ bool TeXworksSetting(
 		if (::GetFileAttributes(b) != -1){
 			tools_ini = ablib::string(b) + _T("\\tools.ini");
 			if (::GetFileAttributes(tools_ini.c_str()) == -1){
-				error(tools_ini + _T(" を生成します．"));
+				detail(tools_ini + _T(" を生成します．"));
 				{
 					std::wofstream ofs(tools_ini);
 					if (ofs)GenerateToolsINI(ofs);
 					else error(tools_ini + _T(" が開けませんでした．"));
 				}
 			}else{
-				error(tools_ini + _T(" に追記します．"));
+				detail(tools_ini + _T(" に追記します．"));
 				int secnum = 1;
 				ablib::string section;
 				bool platex = true, uplatex = true, pbibtex = true, mendex = true;
