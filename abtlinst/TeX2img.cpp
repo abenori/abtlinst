@@ -60,13 +60,13 @@ bool TeX2img::Download(HWND hwnd,MSGFUNC &msgfunc){
 	}else return true;
 }
 
-bool TeX2img::Install(HWND hwnd,MSGFUNC &msgfunc){
-	if(!m_doinst){
+bool TeX2img::Install(HWND hwnd, MSGFUNC &msgfunc) {
+	if(!m_doinst) {
 		g_Setting.Log(_T("TeX2img をインストールしません．"));
 		return true;
-	}else g_Setting.Log(_T("TeX2img のインストールを実行．"));
+	} else g_Setting.Log(_T("TeX2img のインストールを実行．"));
 	ablib::string dir = g_Applications.m_TeXLive.GetVar(_T("TEXDIR"));
-	if(dir == _T("")){
+	if(dir == _T("")) {
 		g_Setting.Log(_T("TeX2img のインストール中：TEXDIR の取得に失敗しました．"));
 		return false;
 	}
@@ -74,16 +74,23 @@ bool TeX2img::Install(HWND hwnd,MSGFUNC &msgfunc){
 	dir += _T("bin\\win32\\");
 	::CreateDirectoryReflex(dir.c_str());
 	msgfunc.msg(_T("TeX2img のインストール\n"));
+	std::vector<ablib::string> dependsFiles;
+	dependsFiles.push_back(_T("TeX2imgc.exe"));
+	dependsFiles.push_back(_T("TeX2imgc.exe.config"));
+	dependsFiles.push_back(_T("Azuki.dll"));
+	dependsFiles.push_back(_T("mudraw.exe"));
+	dependsFiles.push_back(_T("pdfiumdraw.exe"));
 	if (
 		!::CopyFile((m_filedir + m_file).c_str(), (dir + _T("TeX2img.exe")).c_str(), FALSE) ||
-		!::CopyFile((m_filedir + m_file + _T(".config")).c_str(), (dir + _T("TeX2img.exe.config")).c_str(), FALSE) ||
-		!::CopyFile((m_filedir + _T("Azuki.dll")).c_str(), (dir + _T("Azuki.dll")).c_str(), FALSE))
-	{
+		!::CopyFile((m_filedir + m_file + _T(".config")).c_str(), (dir + _T("TeX2img.exe.config")).c_str(), FALSE)
+	){
 		g_Setting.Log(_T("TeX2imgのインストール：ファイルのコピーに失敗．"));
 	}
-	::CopyFile((m_filedir + _T("tex2imgc.exe")).c_str(), (dir + _T("TeX2imgc.exe")).c_str(), FALSE);
-	::CopyFile((m_filedir + _T("TeX2imgc.exe.config")).c_str(), (dir + _T("TeX2imgc.exe.config")).c_str(), FALSE);
-	//::CopyDirectory(m_filedir + _T("pstoedit"),dir + _T("pstoedit"));
+	for(auto file : dependsFiles) {
+		if(!::CopyFile((m_filedir + file).c_str(), (dir + file).c_str(), FALSE)) {
+			g_Setting.Log(_T("TeX2imgのインストール：") + file + _T("のコピーに失敗．"));
+		}
+	}
 	msgfunc.detail(_T("TeX2img をインストールしました．\n"));
 	return TeX2img_funcs::Set(
 		g_Applications.m_TeXLive.GetVar(_T("TEXDIR")) + _T("\\"),

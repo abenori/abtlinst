@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include <iostream>
-#include <boost/program_options.hpp>
 #include "../abtlinst/abnrSetting_funcs.h"
 #include "../abtlinst/TeX2img_func.h"
 
@@ -70,5 +69,3 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		return -1;
 	}
 }
-
-
