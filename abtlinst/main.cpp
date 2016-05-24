@@ -72,7 +72,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine,i
 	g_module.Term();
 	::CoUninitialize();
 	
-	g_Path.SetPath();
+	//g_Path.SetPath();
 	if(g_Setting.WriteINI()){
 		g_Setting.WriteSetting();
 		g_Applications.WriteSetting();
